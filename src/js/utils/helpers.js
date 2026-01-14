@@ -22,6 +22,49 @@ export function formatNumber(num) {
     return num.toLocaleString('pt-BR');
 }
 
+export function formatCurrency(value) {
+    if (!value || value === 0) return 'R$ 0,00';
+    
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(value);
+}
+
+export function formatDate(dateString) {
+    if (!dateString) return 'Data não informada';
+    
+    try {
+        // Tentar diferentes formatos de data
+        let date;
+        
+        if (dateString.includes('/')) {
+            // Formato DD/MM/YYYY
+            const parts = dateString.split('/');
+            date = new Date(parts[2], parts[1] - 1, parts[0]);
+        } else if (dateString.includes('-')) {
+            // Formato YYYY-MM-DD
+            date = new Date(dateString);
+        } else {
+            date = new Date(dateString);
+        }
+        
+        if (isNaN(date.getTime())) {
+            return dateString; // Retorna original se não conseguir parsear
+        }
+        
+        return date.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    } catch {
+        return dateString;
+    }
+}
+
 /**
  * Gera um número aleatório entre min e max (inclusive)
  * @param {number} min - Valor mínimo

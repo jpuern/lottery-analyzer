@@ -17,7 +17,9 @@ import { showLoader, showError, hideError, showResults, hideResults, getFormValu
 // Estado global da aplicação
 let appState = {
     analysis: null,
-    config: null
+    config: null,
+    allResults: null,
+    filteredResults: null
 };
 
 /**
@@ -69,6 +71,8 @@ async function handleAnalyze() {
         
         // Guardar estado
         appState.analysis = analysis;
+        appState.allResults = allResults;
+        appState.filteredResults = filteredResults;
         appState.config = {
             ...lotteryConfig,
             numbersToGenerate: formValues.numbersToGenerate,
@@ -81,7 +85,7 @@ async function handleAnalyze() {
         const customWeights = strategy === 'custom' ? getCustomWeights() : null;
         const result = generateSequence(analysis, formValues.numbersToGenerate, lotteryConfig, strategy, customWeights);
         
-        renderResults(result, analysis, appState.config);
+        renderResults(result, analysis, appState.config, allResults);
         showResults();
         
     } catch (error) {

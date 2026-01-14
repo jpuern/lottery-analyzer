@@ -55,5 +55,8 @@ export const DOM = {
     temperatureAnalysis: () => document.getElementById('temperatureAnalysis'),
     topPairs: () => document.getElementById('topPairs'),
     topTriplets: () => document.getElementById('topTriplets'),
-    delayedNumbers: () => document.getElementById('delayedNumbers')
+    delayedNumbers: () => document.getElementById('delayedNumbers'),
+
+    // Últimos Concursos (NOVO)
+    recentContests: () => document.getElementById('recentContests')
 };

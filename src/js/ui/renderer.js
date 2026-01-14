@@ -6,7 +6,7 @@
 import { DOM } from './domElements.js';
 import { getAllStrategies } from '../config/strategyConfig.js';
 import { getTemperatureIcon } from '../analysis/temperatureAnalyzer.js';
-import { padNumber } from '../utils/helpers.js';
+import { padNumber, formatCurrency, formatDate } from '../utils/helpers.js';
 
 /**
  * Renderiza os cards de estratégias
@@ -48,7 +48,7 @@ export function renderStrategies(onSelect) {
  * @param {Object} analysis - Dados da análise
  * @param {Object} config - Configuração atual
  */
-export function renderResults(result, analysis, config) {
+export function renderResults(result, analysis, config, recentResults) {
     renderStrategyUsed(result.strategy);
     renderLotteryInfo(config, analysis.totalContests);
     renderGeneratedNumbers(result.sequence, analysis.temperature, config.cssClass);
@@ -58,6 +58,7 @@ export function renderResults(result, analysis, config) {
     renderPairs(analysis.pairs, result.includedPairs);
     renderTriplets(analysis.triplets);
     renderDelayedNumbers(analysis.sortedDelay, result.sequence);
+    renderRecentContests(recentResults, config.cssClass, analysis.temperature);
 }
 
 /**
@@ -202,4 +203,161 @@ function renderDelayedNumbers(sortedDelay, sequence) {
         const className = isSelected ? 'stat-item stat-item--cold' : 'stat-item';
         return `<span class="${className}">${padNumber(item.num)} (${item.delay} conc.)${isSelected ? ' ✓' : ''}</span>`;
     }).join('');
+}
+/**
+ * Renderiza os últimos 10 concursos
+ */
+function renderRecentContests(results, cssClass, temperature) {
+    const container = DOM.recentContests();
+    if (!container || !results || results.length === 0) {
+        if (container) {
+            container.innerHTML = '<p class="text-muted">Nenhum concurso disponível</p>';
+        }
+        return;
+    }
+    
+    // Ordenar por concurso (maior para menor) e pegar os 10 primeiros
+    const sortedResults = [...results].sort((a, b) => 
+        parseInt(b.concurso) - parseInt(a.concurso)
+    );
+    
+    const last10 = sortedResults.slice(0, 10);
+    
+    // O primeiro é o mais recente - mostrar info do próximo concurso
+    const mostRecent = last10[0];
+    const nextContestInfo = getNextContestInfo(mostRecent);
+    
+    // Header com próximo concurso
+    let headerHtml = '';
+    if (nextContestInfo) {
+        headerHtml = `
+            <div class="next-contest-info">
+                <div class="next-contest-info__header">
+                    <span class="next-contest-info__icon">🎯</span>
+                    <span class="next-contest-info__title">Próximo Concurso: ${nextContestInfo.numero}</span>
+                </div>
+                <div class="next-contest-info__details">
+                    <div class="next-contest-info__item">
+                        <span class="next-contest-info__label">💰 Prêmio Estimado:</span>
+                        <span class="next-contest-info__value next-contest-info__value--prize">
+                            ${nextContestInfo.valorEstimado}
+                        </span>
+                    </div>
+                    ${nextContestInfo.valorAcumulado !== 'R$ 0,00' ? `
+                        <div class="next-contest-info__item">
+                            <span class="next-contest-info__label">📈 Valor Acumulado:</span>
+                            <span class="next-contest-info__value next-contest-info__value--accumulated">
+                                ${nextContestInfo.valorAcumulado}
+                            </span>
+                        </div>
+                    ` : ''}
+                    ${nextContestInfo.dataProximoConcurso ? `
+                        <div class="next-contest-info__item">
+                            <span class="next-contest-info__label">📅 Data do Sorteio:</span>
+                            <span class="next-contest-info__value">
+                                ${nextContestInfo.dataProximoConcurso}
+                            </span>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    }
+    
+    // Cards dos concursos
+    const contestsHtml = last10.map(contest => {
+        const dezenas = contest.dezenas.map(d => parseInt(d)).sort((a, b) => a - b);
+        const data = formatDate(contest.data);
+        const premio = getPremioInfo(contest);
+        const acumulado = contest.acumulou || false;
+        
+        return `
+            <div class="contest-card">
+                <div class="contest-card__header">
+                    <span class="contest-card__number">
+                        🎱 Concurso ${contest.concurso}
+                    </span>
+                    <span class="contest-card__date">
+                        📅 ${data}
+                        ${acumulado ? '<span class="contest-card__accumulated">Acumulou</span>' : ''}
+                    </span>
+                </div>
+                
+                <div class="contest-card__numbers">
+                    ${dezenas.map(num => {
+                        const temp = temperature[num];
+                        const tempClass = temp === 'hot' ? 'is-hot' : temp === 'cold' ? 'is-cold' : '';
+                        return `
+                            <span class="contest-card__ball contest-card__ball--${cssClass} ${tempClass}">
+                                ${padNumber(num)}
+                            </span>
+                        `;
+                    }).join('')}
+                </div>
+                
+                <div class="contest-card__footer">
+                    <span class="contest-card__prize">
+                        💰 ${premio.valor}
+                    </span>
+                    <span class="contest-card__winners">
+                        ${premio.ganhadores}
+                    </span>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    container.innerHTML = headerHtml + contestsHtml;
+}
+
+/**
+ * Extrai informações do próximo concurso
+ */
+function getNextContestInfo(contest) {
+    if (!contest) return null;
+    
+    const proximoConcurso = parseInt(contest.concurso) + 1;
+    
+    // Tentar pegar valores do próximo concurso
+    const valorEstimado = contest.valorEstimadoProximoConcurso || 
+                          contest.valorEstimadoConcursoEspecial || 
+                          0;
+    
+    const valorAcumulado = contest.valorAcumuladoProximoConcurso || 
+                           contest.valorAcumuladoConcursoEspecial ||
+                           contest.valorAcumulado ||
+                           0;
+    
+    const dataProximo = contest.dataProximoConcurso || null;
+    
+    return {
+        numero: proximoConcurso,
+        valorEstimado: formatCurrency(valorEstimado),
+        valorAcumulado: formatCurrency(valorAcumulado),
+        dataProximoConcurso: dataProximo ? formatDate(dataProximo) : null,
+        acumulou: contest.acumulou || false
+    };
+}
+
+/**
+ * Extrai informações de prêmio do concurso
+ */
+function getPremioInfo(contest) {
+    let valorPremio = 0;
+    let numGanhadores = 0;
+    
+    if (contest.premiacoes && contest.premiacoes.length > 0) {
+        const premioPrincipal = contest.premiacoes[0];
+        valorPremio = premioPrincipal.valorPremio || 0;
+        numGanhadores = premioPrincipal.ganhadores || 0;
+    } else if (contest.valorArrecadado) {
+        valorPremio = contest.valorArrecadado;
+    }
+    
+    return {
+        valor: formatCurrency(valorPremio),
+        ganhadores: numGanhadores > 0 
+            ? `🏆 <strong>${numGanhadores}</strong> ganhador${numGanhadores > 1 ? 'es' : ''}`
+            : '😢 Sem ganhadores'
+    };
 }
