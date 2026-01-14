@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Analisador de Loterias - Análise estatística avançada para Mega-Sena, Lotofácil, Quina e Timemania">
+    <meta name="author" content="Lottery Analyzer">
+    <title>Analisador de Loterias Pro</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="src/css/main.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="header__title">🎲 Analisador de Loterias Pro</h1>
+            <p class="header__subtitle">Análise estatística avançada com múltiplas estratégias probabilísticas</p>
+        </header>
+
+        <!-- Configurações -->
+        <section class="card" id="configSection">
+            <h2 class="card__title">⚙️ Configurações da Análise</h2>
+            
+            <div class="form-group">
+                <label class="form-label" for="lotteryType">Selecione a Loteria</label>
+                <select class="form-select" id="lotteryType">
+                    <option value="megasena">Mega-Sena (6 dezenas de 01-60)</option>
+                    <option value="lotofacil">Lotofácil (15 dezenas de 01-25)</option>
+                    <option value="quina">Quina (5 dezenas de 01-80)</option>
+                    <option value="timemania">Timemania (7 dezenas de 01-80)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Modo de Seleção de Concursos</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="modeUltimos" name="selectionMode" value="ultimos" checked>
+                        <label for="modeUltimos">📊 Últimos N Concursos</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="modeIntervalo" name="selectionMode" value="intervalo">
+                        <label for="modeIntervalo">📅 Intervalo de Concursos</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" id="ultimosConfig">
+                <label class="form-label" for="lastContests">Quantidade de Últimos Concursos</label>
+                <input type="number" class="form-input" id="lastContests" min="10" max="3000" value="100" placeholder="Ex: 100">
+            </div>
+
+            <div class="input-row" id="intervaloConfig" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label" for="contestStart">Concurso Inicial</label>
+                    <input type="number" class="form-input" id="contestStart" min="1" value="1" placeholder="Ex: 1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="contestEnd">Concurso Final</label>
+                    <input type="number" class="form-input" id="contestEnd" min="1" value="100" placeholder="Ex: 100">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="numbersToGenerate">Quantidade de Números a Gerar (máx. 20)</label>
+                <input type="number" class="form-input" id="numbersToGenerate" min="1" max="20" value="6" placeholder="Ex: 6">
+            </div>
+        </section>
+
+        <!-- Estratégias -->
+        <section class="card" id="strategySection">
+            <h2 class="card__title">🎯 Estratégia de Geração</h2>
+            <p class="card__description">Escolha a estratégia probabilística que melhor se adapta ao seu estilo de jogo</p>
+            
+            <div class="strategies-grid" id="strategiesGrid">
+                <!-- Estratégias serão renderizadas via JS -->
+            </div>
+
+            <!-- Configuração Personalizada -->
+            <div class="advanced-config" id="customConfig">
+                <h4 class="advanced-config__title">🎛️ Configuração Personalizada</h4>
+                
+                <div class="slider-group">
+                    <label class="slider-label">
+                        <span>Peso - Números Quentes</span>
+                        <span id="hotValue">30%</span>
+                    </label>
+                    <input type="range" class="slider" id="hotWeight" min="0" max="100" value="30">
+                    <div class="slider-preview">
+                        <span>Menos quentes</span>
+                        <span>Mais quentes</span>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label class="slider-label">
+                        <span>Peso - Números Frios</span>
+                        <span id="coldValue">20%</span>
+                    </label>
+                    <input type="range" class="slider" id="coldWeight" min="0" max="100" value="20">
+                    <div class="slider-preview">
+                        <span>Menos frios</span>
+                        <span>Mais frios</span>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label class="slider-label">
+                        <span>Peso - Duplas Frequentes</span>
+                        <span id="pairsValue">25%</span>
+                    </label>
+                    <input type="range" class="slider" id="pairsWeight" min="0" max="100" value="25">
+                    <div class="slider-preview">
+                        <span>Ignorar duplas</span>
+                        <span>Priorizar duplas</span>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label class="slider-label">
+                        <span>Peso - Trincas Frequentes</span>
+                        <span id="tripletsValue">15%</span>
+                    </label>
+                    <input type="range" class="slider" id="tripletsWeight" min="0" max="100" value="15">
+                    <div class="slider-preview">
+                        <span>Ignorar trincas</span>
+                        <span>Priorizar trincas</span>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label class="slider-label">
+                        <span>Fator de Aleatoriedade</span>
+                        <span id="randomValue">10%</span>
+                    </label>
+                    <input type="range" class="slider" id="randomWeight" min="0" max="50" value="10">
+                    <div class="slider-preview">
+                        <span>Mais previsível</span>
+                        <span>Mais variado</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Botões de Ação -->
+        <section class="card">
+            <button class="btn btn--primary" id="analyzeBtn">
+                🔍 Analisar e Gerar Sequência
+            </button>
+            <button class="btn btn--secondary" id="regenerateBtn" style="display: none;">
+                🔄 Gerar Nova Sequência (mesma análise)
+            </button>
+        </section>
+
+        <!-- Loader -->
+        <div class="loader" id="loader">
+            <div class="loader__spinner"></div>
+            <p class="loader__text">Buscando dados e analisando padrões...</p>
+        </div>
+
+        <!-- Erro -->
+        <div class="error" id="error"></div>
+
+        <!-- Resultados -->
+        <section class="results" id="results">
+            <!-- Sequência Gerada -->
+            <div class="card">
+                <h2 class="card__title">🎯 Sequência Gerada</h2>
+                
+                <div class="strategy-used" id="strategyUsed"></div>
+                <div class="lottery-info" id="lotteryInfo"></div>
+                <div class="generated-numbers" id="generatedNumbers"></div>
+
+                <div class="composition-bar" id="compositionBar"></div>
+                <div class="legend">
+                    <div class="legend__item">
+                        <span class="legend__dot legend__dot--hot"></span> Quentes
+                    </div>
+                    <div class="legend__item">
+                        <span class="legend__dot legend__dot--neutral"></span> Neutros
+                    </div>
+                    <div class="legend__item">
+                        <span class="legend__dot legend__dot--cold"></span> Frios
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4 class="stat-card__title">📈 Concursos Analisados</h4>
+                        <p class="stat-card__value" id="statContests">-</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4 class="stat-card__title">🔥 Quentes na Sequência</h4>
+                        <p class="stat-card__value" id="statHot">-</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4 class="stat-card__title">❄️ Frios na Sequência</h4>
+                        <p class="stat-card__value" id="statCold">-</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4 class="stat-card__title">👥 Duplas Incluídas</h4>
+                        <p class="stat-card__value" id="statPairs">-</p>
+                    </div>
+                </div>
+
+                <button class="btn btn--regenerate" id="regenerateBtnInline">
+                    🔄 Gerar Nova Sequência
+                </button>
+            </div>
+
+            <!-- Análise Detalhada -->
+            <div class="card">
+                <h2 class="card__title">📊 Análise Detalhada</h2>
+                
+                <div class="analysis-section">
+                    <h4 class="analysis-section__title">🌡️ Classificação dos Números (Temperatura)</h4>
+                    <div id="temperatureAnalysis"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h4 class="analysis-section__title">👥 Top 10 Duplas Mais Frequentes</h4>
+                    <div class="stat-list" id="topPairs"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h4 class="analysis-section__title">🔺 Top 8 Trincas Mais Frequentes</h4>
+                    <div class="stat-list" id="topTriplets"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h4 class="analysis-section__title">📉 Números Mais Atrasados</h4>
+                    <div class="stat-list" id="delayedNumbers"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="footer__text">⚠️ Este é um sistema de análise estatística. Loterias são jogos de azar e resultados passados não garantem resultados futuros.</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script type="module" src="src/js/app.js"></script>
+</body>
+</html>

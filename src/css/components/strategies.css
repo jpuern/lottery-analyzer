@@ -1,0 +1,114 @@
+/**
+ * Strategies
+ * Estilos para cards de estratégias
+ */
+
+.strategies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.strategy-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-xl);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    position: relative;
+}
+
+.strategy-card:hover {
+    border-color: rgba(0, 212, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.strategy-card.selected {
+    border-color: var(--color-primary);
+    background: rgba(0, 212, 255, 0.1);
+}
+
+.strategy-card input[type="radio"] {
+    display: none;
+}
+
+.strategy-card__icon {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.strategy-card__title {
+    font-size: var(--font-size-md);
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text-primary);
+}
+
+.strategy-card__description {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    line-height: 1.4;
+}
+
+.strategy-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-top: 12px;
+}
+
+.strategy-card__check {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    width: 24px;
+    height: 24px;
+    border-radius: var(--border-radius-full);
+    background: var(--color-primary);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.strategy-card.selected .strategy-card__check {
+    display: flex;
+}
+
+/* Tags */
+.tag {
+    font-size: var(--font-size-xs);
+    padding: 3px 8px;
+    border-radius: var(--border-radius-lg);
+    background: var(--color-bg-input);
+}
+
+.tag--hot {
+    background: rgba(255, 87, 34, 0.3);
+    color: var(--color-hot-light);
+}
+
+.tag--cold {
+    background: rgba(33, 150, 243, 0.3);
+    color: var(--color-cold-light);
+}
+
+.tag--neutral {
+    background: rgba(156, 39, 176, 0.3);
+    color: var(--color-neutral-light);
+}
+
+.tag--pairs {
+    background: rgba(76, 175, 80, 0.3);
+    color: var(--color-success-light);
+}
+
+.tag--triplets {
+    background: rgba(255, 193, 7, 0.3);
+    color: var(--color-warning-light);
+}
+
+.tag--balanced {
+    background: rgba(0, 188, 212, 0.3);
+    color: #4dd0e1;
+}

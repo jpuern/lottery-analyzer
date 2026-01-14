@@ -1,0 +1,210 @@
+/**
+ * Number Balls
+ * Estilos para as bolas de números das loterias
+ */
+
+.generated-numbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin: var(--spacing-2xl) 0;
+}
+
+.number-ball {
+    width: var(--number-ball-size);
+    height: var(--number-ball-size);
+    border-radius: var(--border-radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    animation: popIn 0.3s ease backwards;
+    position: relative;
+}
+
+/* Cores por Loteria */
+.number-ball--mega-sena {
+    background: linear-gradient(135deg, var(--color-megasena-start), var(--color-megasena-end));
+}
+
+.number-ball--lotofacil {
+    background: linear-gradient(135deg, var(--color-lotofacil-start), var(--color-lotofacil-end));
+}
+
+.number-ball--quina {
+    background: linear-gradient(135deg, var(--color-quina-start), var(--color-quina-end));
+}
+
+.number-ball--timemania {
+    background: linear-gradient(135deg, var(--color-timemania-start), var(--color-timemania-end));
+}
+
+/* Indicador de Temperatura */
+.number-ball__temp {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    width: 18px;
+    height: 18px;
+    border-radius: var(--border-radius-full);
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.number-ball__temp--hot {
+    background: var(--color-hot);
+}
+
+.number-ball__temp--cold {
+    background: var(--color-cold);
+}
+
+.number-ball__temp--neutral {
+    background: var(--color-neutral);
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+/* Composition Bar */
+.composition-bar {
+    display: flex;
+    height: 30px;
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    margin: var(--spacing-lg) 0;
+}
+
+.composition-bar__segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    transition: all var(--transition-normal);
+}
+
+.composition-bar__segment--hot {
+    background: var(--color-hot);
+}
+
+.composition-bar__segment--neutral {
+    background: var(--color-neutral);
+}
+
+.composition-bar__segment--cold {
+    background: var(--color-cold);
+}
+
+/* Legend */
+.legend {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.legend__item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+.legend__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: var(--border-radius-full);
+}
+
+.legend__dot--hot {
+    background: var(--color-hot);
+}
+
+.legend__dot--neutral {
+    background: var(--color-neutral);
+}
+
+.legend__dot--cold {
+    background: var(--color-cold);
+}
+
+/* Frequency Bar */
+.freq-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.freq-bar__num {
+    width: 35px;
+    font-weight: var(--font-weight-bold);
+}
+
+.freq-bar__container {
+    flex: 1;
+    height: 20px;
+    background: var(--color-bg-input);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    margin: 0 var(--spacing-md);
+}
+
+.freq-bar__fill {
+    height: 100%;
+    border-radius: var(--border-radius-lg);
+    transition: width var(--transition-slow);
+}
+
+.freq-bar__fill--hot {
+    background: linear-gradient(90deg, var(--color-hot), var(--color-hot-light));
+}
+
+.freq-bar__fill--neutral {
+    background: linear-gradient(90deg, var(--color-neutral), var(--color-neutral-light));
+}
+
+.freq-bar__fill--cold {
+    background: linear-gradient(90deg, var(--color-cold), var(--color-cold-light));
+}
+
+.freq-bar__count {
+    width: 50px;
+    text-align: right;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+}
+
+.freq-bar__badge {
+    font-size: var(--font-size-xs);
+    padding: 2px 6px;
+    border-radius: var(--border-radius-md);
+    margin-left: var(--spacing-xs);
+}
+
+.freq-bar__badge--hot {
+    background: rgba(255, 87, 34, 0.3);
+    color: var(--color-hot-light);
+}
+
+.freq-bar__badge--cold {
+    background: rgba(33, 150, 243, 0.3);
+    color: var(--color-cold-light);
+}
+
+.freq-bar__badge--neutral {
+    background: rgba(156, 39, 176, 0.3);
+    color: var(--color-neutral-light);
+}

@@ -1,0 +1,14 @@
+/**
+ * Footer
+ * Estilos para o rodapé
+ */
+
+.footer {
+    text-align: center;
+    margin-top: var(--spacing-3xl);
+}
+
+.footer__text {
+    color: var(--color-text-dark);
+    font-size: var(--font-size-sm);
+}

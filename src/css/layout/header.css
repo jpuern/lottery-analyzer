@@ -1,0 +1,23 @@
+/**
+ * Header
+ * Estilos para o cabeçalho
+ */
+
+.header {
+    text-align: center;
+    margin-bottom: var(--spacing-3xl);
+}
+
+.header__title {
+    font-size: var(--font-size-2xl);
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--spacing-md);
+}
+
+.header__subtitle {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-base);
+}
