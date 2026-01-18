@@ -241,6 +241,109 @@
                 <div class="recent-contests" id="recentContests"></div>
             </div>
         </section>
+        <!-- Seção de Doação -->
+        <section class="donation-section" id="donationSection">
+            <div class="donation-card">
+                <div class="donation-card__header">
+                    <span class="donation-card__icon">☕</span>
+                    <h3 class="donation-card__title">Gostou do app?</h3>
+                    <p class="donation-card__subtitle">Me pague um café para manter o projeto ativo!</p>
+                </div>
+
+                <div class="donation-card__options">
+                    <button class="donation-btn" data-value="5">
+                        <span class="donation-btn__icon">☕</span>
+                        <span class="donation-btn__value">R$ 5</span>
+                        <span class="donation-btn__label">1 café</span>
+                    </button>
+
+                    <button class="donation-btn" data-value="10">
+                        <span class="donation-btn__icon">☕☕</span>
+                        <span class="donation-btn__value">R$ 10</span>
+                        <span class="donation-btn__label">2 cafés</span>
+                    </button>
+
+                    <button class="donation-btn donation-btn--featured" data-value="20">
+                        <span class="donation-btn__badge">Popular</span>
+                        <span class="donation-btn__icon">🍕</span>
+                        <span class="donation-btn__value">R$ 20</span>
+                        <span class="donation-btn__label">1 pizza</span>
+                    </button>
+
+                    <button class="donation-btn" data-value="50">
+                        <span class="donation-btn__icon">🎉</span>
+                        <span class="donation-btn__value">R$ 50</span>
+                        <span class="donation-btn__label">Apoiador</span>
+                    </button>
+                </div>
+
+                <button class="donation-btn-custom" id="customDonation">
+                    💝 Outro valor
+                </button>
+            </div>
+        </section>
+
+        <!-- Modal de Doação PIX -->
+        <div class="modal" id="donationModal">
+            <div class="modal__overlay" id="donationModalOverlay"></div>
+            <div class="modal__content modal__content--donation">
+                <button class="modal__close" id="closeDonationModal">&times;</button>
+
+                <div class="donation-modal">
+                    <div class="donation-modal__header">
+                        <span class="donation-modal__icon">💚</span>
+                        <h2 class="donation-modal__title">Obrigado pelo apoio!</h2>
+                        <p class="donation-modal__value" id="donationValue">R$ 10,00</p>
+                    </div>
+
+                    <div class="donation-modal__pix">
+                        <p class="donation-modal__instruction">Escaneie o QR Code ou copie a chave PIX:</p>
+
+                        <!-- QR Code (substitua pela sua imagem) -->
+                        <div class="donation-modal__qr" id="qrCodeContainer">
+                            <img src="src/assets/qrcode-pix.png"
+                                alt="QR Code PIX" id="qrCodeImage" class="donation-modal__qr-image">
+                            <p class="donation-modal__qr-tip">📱 Aponte a câmera do seu banco</p>
+                        </div>
+
+                        <div class="donation-modal__divider">
+                            <span>ou</span>
+                        </div>
+
+                        <!-- Chave PIX -->
+                        <div class="donation-modal__key">
+                            <label class="donation-modal__label">Chave PIX (E-mail/CPF/Telefone):</label>
+                            <div class="donation-modal__copy-group">
+                                <input type="text" class="donation-modal__input" id="pixKey" value="seuemail@exemplo.com"
+                                    readonly>
+                                <button class="donation-modal__copy-btn" id="copyPixKey">
+                                    📋 Copiar
+                                </button>
+                            </div>
+                            <span class="donation-modal__copied" id="copiedFeedback">✅ Copiado!</span>
+                        </div>
+                    </div>
+
+                    <div class="donation-modal__footer">
+                        <p class="donation-modal__thanks">
+                            Cada contribuição ajuda a manter o servidor online e desenvolver novos recursos! 🚀
+                        </p>
+
+                        <div class="donation-modal__social">
+                            <p>Compartilhe com os amigos:</p>
+                            <div class="donation-modal__social-btns">
+                                <a href="#" class="social-btn social-btn--whatsapp" id="shareWhatsapp">
+                                    📱 WhatsApp
+                                </a>
+                                <a href="#" class="social-btn social-btn--telegram" id="shareTelegram">
+                                    ✈️ Telegram
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Footer -->
         <footer class="footer">
