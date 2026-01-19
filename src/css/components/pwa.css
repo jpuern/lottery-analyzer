@@ -1,0 +1,116 @@
+/* ==================== PWA INSTALL BUTTON ==================== */
+
+.install-app-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+    border: none;
+    border-radius: 50px;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    animation: pulse 2s infinite;
+}
+
+.install-app-btn.show {
+    display: flex;
+}
+
+.install-app-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 30px rgba(0, 212, 255, 0.6);
+}
+
+.install-app-btn__icon {
+    font-size: 1.2rem;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 30px rgba(0, 212, 255, 0.7);
+    }
+}
+
+/* ==================== UPDATE NOTIFICATION ==================== */
+
+.update-notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #1a1a2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    z-index: 99999;
+    animation: slideUp 0.3s ease;
+}
+
+.update-notification p {
+    margin: 0;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.update-notification button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.update-notification button:first-of-type {
+    background: #00d4ff;
+    color: #000;
+}
+
+.update-notification button:last-of-type {
+    background: transparent;
+    color: #888;
+    border: 1px solid #888;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+    .install-app-btn {
+        bottom: 15px;
+        right: 15px;
+        padding: 10px 16px;
+        font-size: 0.85rem;
+    }
+    
+    .update-notification {
+        flex-direction: column;
+        width: calc(100% - 30px);
+        text-align: center;
+    }
+}

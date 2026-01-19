@@ -14,6 +14,8 @@ import { initEventListeners, getCurrentStrategy, getCustomWeights } from './ui/e
 import { renderResults } from './ui/renderer.js';
 import { showLoader, showError, hideError, showResults, hideResults, getFormValues } from './ui/uiHelpers.js';
 import { initDonationHandlers } from './ui/donationHandler.js';
+import { initPWA } from './pwa.js';
+
 
 // Estado global da aplicação
 let appState = {
@@ -30,6 +32,7 @@ function init() {
     console.log('🎲 Analisador de Loterias Pro - Inicializado');
     initEventListeners(handleAnalyze, handleRegenerate);
     initDonationHandlers();
+    initPWA();
 }
 
 /**
