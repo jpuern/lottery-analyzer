@@ -1,0 +1,7 @@
+# robots.txt para Analisador de Loterias
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://analisador-loterias.vercel.app/sitemap.xml
