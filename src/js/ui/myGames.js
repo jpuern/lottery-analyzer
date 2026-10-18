@@ -8,8 +8,15 @@ import { getLotteryConfig } from '../config/lotteryConfig.js';
 import { getFixedGames } from '../config/myGamesConfig.js';
 import { fetchContest } from '../services/apiService.js';
 import { getGamesText, saveGamesText, getLastLottery, setLastLottery } from '../services/gamesStorage.js';
+import { readHistory } from '../services/historyCache.js';
 import { parseGames, checkGame } from '../analysis/gameChecker.js';
 import { padNumber, formatCurrency, formatDate, debounce } from '../utils/helpers.js';
+
+// Quantidade de concursos recentes sugeridos no campo "Concurso"
+const CONTEST_OPTIONS_COUNT = 5;
+
+// Concursos já buscados nesta sessão, por loteria: { [lotteryType]: Map<numero, concurso> }
+const contestsCache = {};
 
 /**
  * Inicializa a seção "Conferir Meus Jogos"
@@ -28,7 +35,18 @@ export function initMyGames() {
     lotterySelect.addEventListener('change', () => {
         setLastLottery(lotterySelect.value);
         loadGamesFor(lotterySelect.value);
+        DOM.myGamesContest().value = '';
         DOM.myGamesResults().innerHTML = '';
+        loadContestOptions(lotterySelect.value);
+    });
+
+    // Escolher um concurso da lista (ou digitar e sair do campo) já confere
+    const contestInput = DOM.myGamesContest();
+    contestInput.addEventListener('change', handleCheck);
+    contestInput.addEventListener('input', (event) => {
+        if (event.inputType === 'insertReplacementText' || event.inputType === undefined) {
+            handleCheck();
+        }
     });
 
     input.addEventListener('input', debounce(() => {
@@ -40,6 +58,8 @@ export function initMyGames() {
 
     if (getGameGroups(lotterySelect.value).length > 0) {
         handleCheck();
+    } else {
+        loadContestOptions(lotterySelect.value);
     }
 }
 
@@ -114,13 +134,79 @@ async function handleCheck() {
     resultsEl.innerHTML = '<p class="my-games__message">Buscando resultado...</p>';
 
     try {
-        const contest = await fetchContest(config.api, contestNumber > 0 ? contestNumber : 'latest');
+        const contest = contestNumber > 0
+            ? await getContest(lotteryType, contestNumber)
+            : await fetchContest(config.api, 'latest');
+        rememberContest(lotteryType, contest);
         renderCheckResults(groups, contest, config);
+
+        if (!(contestNumber > 0)) {
+            loadContestOptions(lotteryType, Number(contest.concurso));
+        }
     } catch (error) {
         resultsEl.innerHTML = `<p class="my-games__message my-games__message--error">❌ ${error.message}</p>`;
     } finally {
         button.disabled = false;
     }
+}
+
+/**
+ * Preenche as sugestões do campo "Concurso" com os últimos concursos
+ * @param {string} lotteryType - Tipo da loteria
+ * @param {number} [latestNumber] - Número do último concurso, se já conhecido
+ */
+async function loadContestOptions(lotteryType, latestNumber) {
+    const config = getLotteryConfig(lotteryType);
+
+    try {
+        if (!latestNumber) {
+            const latest = await fetchContest(config.api, 'latest');
+            rememberContest(lotteryType, latest);
+            latestNumber = Number(latest.concurso);
+        }
+
+        const numbers = Array.from({ length: CONTEST_OPTIONS_COUNT }, (_, i) => latestNumber - i).filter(n => n > 0);
+        const contests = await Promise.all(numbers.map(n => getContest(lotteryType, n).catch(() => null)));
+
+        // A loteria pode ter mudado enquanto buscava
+        if (DOM.myGamesLottery().value !== lotteryType) return;
+
+        DOM.myGamesContestOptions().innerHTML = numbers.map((number, index) => {
+            const date = contests[index] ? ` · ${formatDate(contests[index].data)}` : '';
+            const latestTag = index === 0 ? ' (último)' : '';
+            return `<option value="${number}" label="Concurso ${number}${date}${latestTag}"></option>`;
+        }).join('');
+    } catch (error) {
+        console.warn('Não foi possível carregar os últimos concursos:', error.message);
+    }
+}
+
+/**
+ * Busca um concurso, usando o que já foi buscado ou o histórico em cache
+ * @param {string} lotteryType - Tipo da loteria
+ * @param {number} number - Número do concurso
+ * @returns {Promise<Object>} Concurso
+ */
+async function getContest(lotteryType, number) {
+    const cached = contestsCache[lotteryType]?.get(number);
+    if (cached) return cached;
+
+    // O histórico em cache só tem prêmios dos concursos mais recentes
+    const config = getLotteryConfig(lotteryType);
+    const fromHistory = (readHistory(config.api) || []).find(c => Number(c.concurso) === number);
+    if (fromHistory?.premiacoes) {
+        rememberContest(lotteryType, fromHistory);
+        return fromHistory;
+    }
+
+    const contest = await fetchContest(config.api, number);
+    rememberContest(lotteryType, contest);
+    return contest;
+}
+
+function rememberContest(lotteryType, contest) {
+    contestsCache[lotteryType] ??= new Map();
+    contestsCache[lotteryType].set(Number(contest.concurso), contest);
 }
 
 /**

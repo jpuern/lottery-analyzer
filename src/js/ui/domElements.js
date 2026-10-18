@@ -63,6 +63,7 @@ export const DOM = {
     // Conferir Meus Jogos
     myGamesLottery: () => document.getElementById('myGamesLottery'),
     myGamesContest: () => document.getElementById('myGamesContest'),
+    myGamesContestOptions: () => document.getElementById('myGamesContestOptions'),
     myGamesInput: () => document.getElementById('myGamesInput'),
     myGamesHint: () => document.getElementById('myGamesHint'),
     myGamesResults: () => document.getElementById('myGamesResults'),
