@@ -1,0 +1,155 @@
+/**
+ * My Games
+ * Estilos para a seção "Conferir Meus Jogos"
+ */
+
+.my-games__textarea {
+    font-family: Consolas, 'Courier New', monospace;
+    resize: vertical;
+    min-height: 110px;
+    line-height: 1.6;
+}
+
+.my-games__hint {
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+.my-games__results:not(:empty) {
+    margin-top: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.my-games__message {
+    color: var(--color-text-secondary);
+    text-align: center;
+}
+
+.my-games__message--error {
+    color: var(--color-error-light);
+}
+
+.my-games__contest {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    border-left: 3px solid var(--color-primary);
+}
+
+.my-games__contest .contest-card__numbers {
+    margin-bottom: 0;
+}
+
+.my-games__summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm) var(--spacing-xl);
+    color: var(--color-text-secondary);
+}
+
+.my-games__summary strong {
+    color: var(--color-text-primary);
+}
+
+.my-games__prize {
+    color: var(--color-success-light) !important;
+}
+
+.my-games__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.my-games__group-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--color-border);
+    font-size: var(--font-size-md);
+    color: var(--color-primary);
+}
+
+.my-games__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.my-game {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+}
+
+.my-game--winner {
+    border-color: var(--color-success);
+    background: rgba(76, 175, 80, 0.08);
+}
+
+.my-game--invalid {
+    border-color: rgba(244, 67, 54, 0.4);
+}
+
+.my-game__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.my-game--invalid .my-game__header {
+    margin-bottom: 0;
+}
+
+.my-game__title {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+}
+
+.my-game__hits {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+}
+
+.my-game--winner .my-game__hits {
+    color: var(--color-success-light);
+}
+
+.my-game__error {
+    font-size: var(--font-size-sm);
+    color: var(--color-error-light);
+}
+
+.my-game .contest-card__numbers {
+    margin-bottom: 0;
+}
+
+.my-game__ball--miss {
+    background: transparent;
+    border: 1px solid var(--color-border-light);
+    color: var(--color-text-muted);
+}
+
+.my-game__prizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+@media (max-width: 480px) {
+    .my-game .contest-card__ball {
+        width: 34px;
+        height: 34px;
+    }
+}

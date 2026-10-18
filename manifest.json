@@ -9,7 +9,10 @@
     "orientation": "portrait",
     "scope": "/",
     "lang": "pt-BR",
-    "categories": ["utilities", "entertainment"],
+    "categories": [
+        "utilities",
+        "entertainment"
+    ],
     "icons": [
         {
             "src": "src/assets/icon-72x72.png",
@@ -48,48 +51,36 @@
             "purpose": "maskable any"
         },
         {
-            "src": "src/assets/icon-384x384.png",
-            "sizes": "384x384",
-            "type": "image/png",
-            "purpose": "maskable any"
-        },
-        {
             "src": "src/assets/icon-512x512.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable any"
         }
     ],
-    "screenshots": [
-        {
-            "src": "src/assets/screenshots/screenshot-mobile.png",
-            "sizes": "390x844",
-            "type": "image/png",
-            "form_factor": "narrow",
-            "label": "Tela inicial do Analisador de Loterias"
-        },
-        {
-            "src": "src/assets/screenshots/screenshot-desktop.png",
-            "sizes": "1280x720",
-            "type": "image/png",
-            "form_factor": "wide",
-            "label": "Versão desktop do Analisador"
-        }
-    ],
     "shortcuts": [
         {
-            "name": "Mega-Sena",
-            "short_name": "Mega",
-            "description": "Analisar Mega-Sena",
-            "url": "/?loteria=megasena",
-            "icons": [{ "src": "src/assets/icon-96x96.png", "sizes": "96x96" }]
+            "name": "Conferir Jogos",
+            "short_name": "Conferir",
+            "description": "Conferir meus jogos no último concurso",
+            "url": "/#conferir",
+            "icons": [
+                {
+                    "src": "src/assets/icon-96x96.png",
+                    "sizes": "96x96"
+                }
+            ]
         },
         {
-            "name": "Lotofácil",
-            "short_name": "Lotofácil",
-            "description": "Analisar Lotofácil",
-            "url": "/?loteria=lotofacil",
-            "icons": [{ "src": "src/assets/icon-96x96.png", "sizes": "96x96" }]
+            "name": "Analisar e Gerar",
+            "short_name": "Analisar",
+            "description": "Analisar estatísticas e gerar sequências",
+            "url": "/#analisar",
+            "icons": [
+                {
+                    "src": "src/assets/icon-96x96.png",
+                    "sizes": "96x96"
+                }
+            ]
         }
     ]
 }

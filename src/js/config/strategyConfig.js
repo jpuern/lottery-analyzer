@@ -35,7 +35,7 @@ export const STRATEGY_CONFIG = {
         id: 'cold',
         name: 'Números Frios (Atrasados)',
         icon: '❄️',
-        description: 'Foca em números que estão "devendo" aparecer. Baseado na Lei dos Grandes Números.',
+        description: 'Foca em números há mais tempo sem sair. Lembre-se: cada sorteio é independente, então atraso não aumenta a chance.',
         weights: { hot: 10, cold: 60, pairs: 15, triplets: 10, random: 5 },
         distribution: { hot: 0.15, neutral: 0.25, cold: 0.60 },
         tags: [
@@ -61,8 +61,8 @@ export const STRATEGY_CONFIG = {
         id: 'cycles',
         name: 'Análise de Ciclos',
         icon: '🔄',
-        description: 'Identifica padrões cíclicos de aparecimento. Números que seguem intervalos regulares.',
-        weights: { hot: 25, cold: 30, pairs: 20, triplets: 15, random: 10 },
+        description: 'Compara o atraso atual de cada número com o seu intervalo médio entre aparições e prioriza os que já passaram do ciclo.',
+        weights: { hot: 20, cold: 10, pairs: 15, triplets: 10, random: 10, cycles: 35 },
         distribution: { hot: 0.30, neutral: 0.40, cold: 0.30 },
         tags: [
             { text: 'Ciclo Médio', type: 'balanced' },

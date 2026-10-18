@@ -1,20 +1,21 @@
-const CACHE_NAME = 'loterias-pro-v1';
+// Altere a versão a cada deploy que mude arquivos estáticos
+const CACHE_NAME = 'loterias-pro-v3';
 
 // Arquivos para cache (funciona offline)
 const STATIC_ASSETS = [
     '/',
     '/index.html',
+    '/manifest.json',
     '/src/css/main.css',
-    '/src/js/main.js',
-    '/src/assets/icons/icon-192x192.png',
-    '/src/assets/icons/icon-512x512.png',
-    '/manifest.json'
+    '/src/js/app.js',
+    '/src/assets/icon-192x192.png',
+    '/src/assets/icon-512x512.png'
 ];
 
 // Instalar Service Worker
 self.addEventListener('install', (event) => {
     console.log('📦 Service Worker: Instalando...');
-    
+
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => {
@@ -28,58 +29,53 @@ self.addEventListener('install', (event) => {
 // Ativar Service Worker
 self.addEventListener('activate', (event) => {
     console.log('✅ Service Worker: Ativado');
-    
+
     // Limpar caches antigos
     event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cache) => {
-                    if (cache !== CACHE_NAME) {
+        caches.keys()
+            .then((cacheNames) => Promise.all(
+                cacheNames
+                    .filter((cache) => cache !== CACHE_NAME)
+                    .map((cache) => {
                         console.log('🗑️ Service Worker: Limpando cache antigo');
                         return caches.delete(cache);
-                    }
-                })
-            );
-        })
+                    })
+            ))
+            .then(() => self.clients.claim())
     );
-    
-    return self.clients.claim();
 });
 
 // Interceptar requisições
 self.addEventListener('fetch', (event) => {
-    // Ignorar requisições de API (sempre buscar online)
-    if (event.request.url.includes('/api/') || 
-        event.request.url.includes('loteriascaixa-api')) {
-        return event.respondWith(fetch(event.request));
+    const { request } = event;
+
+    // Ignorar requisições de API e de outros domínios (sempre buscar online)
+    if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) {
+        return;
     }
-    
-    // Estratégia: Cache First, Network Fallback
+
+    // Estratégia: Network First, Cache Fallback
+    // Assim os usuários sempre recebem a versão mais nova quando estão online
     event.respondWith(
-        caches.match(event.request)
-            .then((cachedResponse) => {
-                if (cachedResponse) {
-                    return cachedResponse;
+        fetch(request)
+            .then((networkResponse) => {
+                if (networkResponse.status === 200) {
+                    const responseClone = networkResponse.clone();
+                    caches.open(CACHE_NAME)
+                        .then((cache) => cache.put(request, responseClone));
                 }
-                
-                return fetch(event.request)
-                    .then((networkResponse) => {
-                        // Cachear novos recursos
-                        if (networkResponse.status === 200) {
-                            const responseClone = networkResponse.clone();
-                            caches.open(CACHE_NAME)
-                                .then((cache) => {
-                                    cache.put(event.request, responseClone);
-                                });
-                        }
-                        return networkResponse;
-                    })
-                    .catch(() => {
-                        // Fallback para página offline
-                        if (event.request.mode === 'navigate') {
-                            return caches.match('/index.html');
-                        }
-                    });
+                return networkResponse;
             })
+            .catch(() => caches.match(request)
+                .then((cachedResponse) => {
+                    if (cachedResponse) {
+                        return cachedResponse;
+                    }
+                    // Fallback para página offline
+                    if (request.mode === 'navigate') {
+                        return caches.match('/index.html');
+                    }
+                    return Response.error();
+                }))
     );
 });

@@ -4,3 +4,11 @@ Aplicação web para análise estatística avançada de loterias brasileiras (Me
 
 ## 📁 Estrutura do Projeto
 
+
+## 🧪 Testes
+
+Requer Node.js 18+ (sem dependências):
+
+```bash
+npm test
+```

@@ -20,6 +20,7 @@
 @import './components/number-balls.css';
 @import './components/strategies.css';
 @import './components/recent-contests.css';
+@import './components/my-games.css';
+@import './components/tabs.css';
 @import './components/donation.css';
-@import './components/modal.css';
 @import './components/pwa.css';

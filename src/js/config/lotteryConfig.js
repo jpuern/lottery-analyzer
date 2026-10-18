@@ -10,7 +10,10 @@ export const LOTTERY_CONFIG = {
         min: 1,
         max: 60,
         defaultNumbers: 6,
-        cssClass: 'mega-sena'
+        cssClass: 'mega-sena',
+        drawSize: 6,
+        betMin: 6,
+        betMax: 20
     },
     lotofacil: {
         name: 'Lotofácil',
@@ -18,7 +21,10 @@ export const LOTTERY_CONFIG = {
         min: 1,
         max: 25,
         defaultNumbers: 15,
-        cssClass: 'lotofacil'
+        cssClass: 'lotofacil',
+        drawSize: 15,
+        betMin: 15,
+        betMax: 20
     },
     quina: {
         name: 'Quina',
@@ -26,7 +32,10 @@ export const LOTTERY_CONFIG = {
         min: 1,
         max: 80,
         defaultNumbers: 5,
-        cssClass: 'quina'
+        cssClass: 'quina',
+        drawSize: 5,
+        betMin: 5,
+        betMax: 15
     },
     timemania: {
         name: 'Timemania',
@@ -34,7 +43,10 @@ export const LOTTERY_CONFIG = {
         min: 1,
         max: 80,
         defaultNumbers: 7,
-        cssClass: 'timemania'
+        cssClass: 'timemania',
+        drawSize: 7,
+        betMin: 10,
+        betMax: 10
     }
 };
 

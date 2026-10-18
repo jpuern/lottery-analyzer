@@ -79,9 +79,15 @@ function calculateScores(analysis, config, weights) {
         scores[i] += (analysis.frequency[i] / maxFreq) * weights.hot;
         
         // Peso de números frios (atraso)
-        const delayInfo = analysis.sortedDelay.find(d => d.num === i);
-        if (delayInfo && maxDelay > 0) {
-            scores[i] += (delayInfo.delay / maxDelay) * weights.cold;
+        if (maxDelay > 0) {
+            scores[i] += (analysis.delay[i] / maxDelay) * weights.cold;
+        }
+
+        // Peso de ciclos: atraso atual comparado ao intervalo médio entre aparições
+        // (1 = exatamente no ciclo médio; limitado a 2x o ciclo)
+        if (weights.cycles && analysis.avgCycle[i] > 0) {
+            const cycleRatio = Math.min(analysis.delay[i] / analysis.avgCycle[i], 2);
+            scores[i] += (cycleRatio / 2) * weights.cycles;
         }
     }
     

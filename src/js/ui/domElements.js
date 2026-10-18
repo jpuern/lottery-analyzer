@@ -58,5 +58,13 @@ export const DOM = {
     delayedNumbers: () => document.getElementById('delayedNumbers'),
 
     // Últimos Concursos (NOVO)
-    recentContests: () => document.getElementById('recentContests')
+    recentContests: () => document.getElementById('recentContests'),
+
+    // Conferir Meus Jogos
+    myGamesLottery: () => document.getElementById('myGamesLottery'),
+    myGamesContest: () => document.getElementById('myGamesContest'),
+    myGamesInput: () => document.getElementById('myGamesInput'),
+    myGamesHint: () => document.getElementById('myGamesHint'),
+    myGamesResults: () => document.getElementById('myGamesResults'),
+    checkGamesBtn: () => document.getElementById('checkGamesBtn')
 };

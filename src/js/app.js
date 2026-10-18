@@ -14,6 +14,8 @@ import { initEventListeners, getCurrentStrategy, getCustomWeights } from './ui/e
 import { renderResults } from './ui/renderer.js';
 import { showLoader, showError, hideError, showResults, hideResults, getFormValues } from './ui/uiHelpers.js';
 import { initDonationHandlers } from './ui/donationHandler.js';
+import { initMyGames } from './ui/myGames.js';
+import { initTabs } from './ui/tabs.js';
 import { initPWA } from './pwa.js';
 
 
@@ -30,8 +32,10 @@ let appState = {
  */
 function init() {
     console.log('🎲 Analisador de Loterias Pro - Inicializado');
+    initTabs();
     initEventListeners(handleAnalyze, handleRegenerate);
     initDonationHandlers();
+    initMyGames();
     initPWA();
 }
 
@@ -120,7 +124,7 @@ function handleRegenerate() {
         customWeights
     );
     
-    renderResults(result, appState.analysis, appState.config);
+    renderResults(result, appState.analysis, appState.config, appState.allResults);
 }
 
 /**

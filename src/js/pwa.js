@@ -135,8 +135,12 @@ async function installApp() {
  */
 function setupUpdateHandler() {
     // Recarregar quando nova versão estiver pronta
+    // (na primeira visita não há versão anterior, então não recarrega)
+    const hadController = Boolean(navigator.serviceWorker?.controller);
     navigator.serviceWorker?.addEventListener('controllerchange', () => {
-        window.location.reload();
+        if (hadController) {
+            window.location.reload();
+        }
     });
 }
 

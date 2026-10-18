@@ -19,7 +19,7 @@ const PIX_CONFIG = {
 };
 
 // URL do site para compartilhamento
-const SITE_URL = 'https://loteria-jp.vercel.app/';
+const SITE_URL = 'https://analisador-loterias.vercel.app/';
 const SITE_NAME = 'Analisador de Loterias Pro';
 
 /**

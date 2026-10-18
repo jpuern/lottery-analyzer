@@ -3,12 +3,57 @@
  * Serviço para comunicação com a API de loterias
  */
 
+import { readHistory, writeHistory, mergeHistory, lastContestNumber } from './historyCache.js';
+
+// Acima disso, é mais rápido baixar o histórico inteiro do que concurso por concurso
+const MAX_MISSING_CONTESTS = 15;
+
 /**
  * Busca os resultados de uma loteria específica
+ * Usa o histórico em cache e baixa só os concursos que faltam
  * @param {string} apiUrl - URL da API
  * @returns {Promise<Array>} Lista de resultados
  */
 export async function fetchLotteryResults(apiUrl) {
+    const history = readHistory(apiUrl);
+
+    if (!history) {
+        const results = await fetchAllResults(apiUrl);
+        writeHistory(apiUrl, results);
+        return results;
+    }
+
+    let latest;
+    try {
+        latest = await fetchContest(apiUrl, 'latest');
+    } catch (error) {
+        // Sem conexão: usar o que já está em cache
+        console.warn('Usando histórico em cache:', error.message);
+        return history;
+    }
+
+    const cachedLast = lastContestNumber(history);
+    const missingCount = Number(latest.concurso) - cachedLast - 1;
+
+    let updated;
+    if (missingCount > MAX_MISSING_CONTESTS) {
+        updated = await fetchAllResults(apiUrl);
+    } else {
+        const missingNumbers = Array.from({ length: Math.max(missingCount, 0) }, (_, i) => cachedLast + 1 + i);
+        const missing = await Promise.all(missingNumbers.map(n => fetchContest(apiUrl, n)));
+        updated = mergeHistory(history, [...missing, latest]);
+    }
+
+    writeHistory(apiUrl, updated);
+    return updated;
+}
+
+/**
+ * Baixa o histórico completo de uma loteria
+ * @param {string} apiUrl - URL da API
+ * @returns {Promise<Array>} Lista de resultados
+ */
+async function fetchAllResults(apiUrl) {
     try {
         const response = await fetch(apiUrl);
         
@@ -47,4 +92,28 @@ export function filterResults(results, mode, options) {
             return concurso >= start && concurso <= end;
         });
     }
+}
+
+/**
+ * Busca um concurso específico (ou o mais recente)
+ * @param {string} apiUrl - URL da API da loteria
+ * @param {number|string} contest - Número do concurso ou 'latest'
+ * @returns {Promise<Object>} Resultado do concurso
+ */
+export async function fetchContest(apiUrl, contest = 'latest') {
+    let response;
+    try {
+        response = await fetch(`${apiUrl}/${contest}`);
+    } catch (error) {
+        console.error('Erro ao buscar concurso:', error);
+        throw new Error('Não foi possível conectar à API. Verifique sua conexão.');
+    }
+
+    if (!response.ok) {
+        throw new Error(contest === 'latest'
+            ? `Erro ao buscar o último concurso (HTTP ${response.status})`
+            : `Concurso ${contest} não encontrado`);
+    }
+
+    return response.json();
 }
